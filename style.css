@@ -1,0 +1,188 @@
+@font-face {
+  font-family: 'Orbitron';
+  src: url('fonts/magistral-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1;
+}
+
+body {
+  margin: 0;
+  font-family: 'Orbitron';
+  background: #0a0a0f;
+  color: #eaeaea;
+  overflow-x: hidden;
+}
+
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: #000;
+}
+
+header {
+  background: #181a20;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #2de0b7;
+  text-shadow: none;
+  border-bottom: 1px solid #2de0b7;
+  font-family: 'Orbitron';
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  font-family: 'Orbitron';
+}
+
+header nav a,
+header nav a.join-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+  font-family: 'Orbitron';
+  margin: 0 5px;
+  color: #2de0b7;
+  background: none;
+  border: none;
+  box-sizing: border-box;
+}
+
+header nav a.join-btn {
+  background: #2de0b7;
+  color: #0a0a0f;
+}
+
+header nav a:hover,
+header nav a.join-btn:hover {
+  color: #fff;
+  background: #00aaff;
+  text-shadow: 0 0 4px #2de0b7;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px 40px;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tennis_court_with_ball.jpg/640px-Tennis_court_with_ball.jpg') no-repeat center/cover;
+  color: #fff;
+  text-shadow: 0 0 12px #000;
+  font-size: 1.7rem;
+  max-width: none;
+  margin: 0;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.hero ul {
+  padding-left: 0;
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 2;
+  text-align: left;
+}
+
+.hero li {
+  margin-bottom: 32px;
+  font-size: 1.2em;
+  text-align: left;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #00aaff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px #00ffcc55;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px #00ffccaa;
+}
+
+.join-btn {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #2de0b7;
+  color: #0a0a0f;
+  text-decoration: none;
+  transition: 0.3s;
+  font-family: 'Orbitron';
+  margin-top: 16px;
+  text-align: center;
+}
+
+.join-btn:hover {
+  background: #00aaff;
+  color: #fff;
+  text-shadow: 0 0 4px #2de0b7;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #111;
+  border-top: 2px solid #00ff99;
+  color: #888;
+  font-size: 0.9rem;
+  font-family: 'Orbitron';
+  margin-top: auto;
+}
+
+#join {
+  text-align: center;
+}
+

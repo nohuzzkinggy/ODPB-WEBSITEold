@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orion Drift Paddle Ball </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <header class="fixed top-0 left-0 right-0 bg-main shadow-md p-4 z-10">
+    
+    <span class="text-xl font-bold">Orion Drift Paddle Ball Teams</span>
+    <nav class="flex space-x-4">
+      <a href="https://discord.gg/WXAn2EmEgF" target="_blank" class="join-btn">Join Our Discord</a>
+      <a href="rules.html">Rules</a>
+      <a href="calender.html">Event Calender</a>
+      <a href="index.html">Go Home</a>
+    </nav>
+  </header>
+  <body class="p-4 md:p-8">
+    <div id="cursor" class="cursor focus:outline-none">
+      <div class="ringnotbroken">
+        <div></div>
+      </div>
+      <div class="ringnotbroken">
+        <div></div>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto">
+      <br/>
+      <br/>
+      <br/>
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">
+        Orion Drift Pickleball Teams
+      <p class="text-gray-600 mb-8">
+        A list of all of the current Orion Drift Pickleball Teams.
+      </p>
+<canvas id="bg"></canvas>
+
+      <div
+        id="message-box"
+        class="flex items-center justify-center bg-white p-6 rounded-lg shadow-inner text-gray-500 text-lg mb-8">
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24">
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span id="message-text">Loading team data...</span>
+      </div>
+
+      <div
+        id="teams-container"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        aria-live="polite">
+    
+      </div>
+    </div>
+   
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAmQJ6DHEe5y6q96OwQaPfwOIhXqE-a15A",
+        authDomain: "odts-teams.firebaseapp.com",
+        databaseURL: "https://odts-teams-default-rtdb.firebaseio.com",
+        projectId: "odts-teams",
+        storageBucket: "odts-teams.appspot.com",
+        messagingSenderId: "306703362383",
+        appId: "1:306703362383:web:120229ff26e0d0703d7d3a",
+        measurementId: "G-3F83ZSC3C6",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const teamsRef = ref(db, "teams");
+
+      const teamsContainer = document.getElementById("teams-container");
+      const messageBox = document.getElementById("message-box");
+      const messageText = document.getElementById("message-text");
+
+      function createBadge(text, baseClasses) {
+        const span = document.createElement("span");
+        span.className =
+          baseClasses + " font-semibold px-2 py-0.5 rounded-full text-sm";
+        span.textContent = text ?? "N/A";
+        return span;
+      }
+
+      function createTeamCardElement(key, data = {}) {
+        const { ownerTag, subTag, teammateTag, createdAt } = data;
+        const container = document.createElement("div");
+        container.className =
+          "team-card bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border-t-4 border-indigo-500";
+
+        const header = document.createElement("div");
+        header.className = "flex items-center mb-4";
+        const emoji = document.createElement("span");
+        emoji.className = "text-3xl mr-3 text-indigo-600";
+        emoji.textContent = "🏆";
+        const title = document.createElement("h2");
+        title.className = "text-xl font-bold text-gray-800 break-words";
+        title.textContent = String(key ?? "Unnamed Team");
+
+        header.appendChild(emoji);
+        header.appendChild(title);
+        container.appendChild(header);
+
+        
+        const body = document.createElement("div");
+        body.className = "space-y-3 text-sm";
+
+        const ownerRow = document.createElement("div");
+        ownerRow.className = "flex justify-between items-center text-gray-700";
+        const ownerLabel = document.createElement("span");
+        ownerLabel.className = "font-medium";
+        ownerLabel.textContent = "Owner:";
+        ownerRow.appendChild(ownerLabel);
+        ownerRow.appendChild(
+          createBadge(ownerTag, "bg-indigo-100 text-indigo-800")
+        );
+        body.appendChild(ownerRow);
+
+        const mateRow = document.createElement("div");
+        mateRow.className = "flex justify-between items-center text-gray-700";
+        const mateLabel = document.createElement("span");
+        mateLabel.className = "font-medium";
+        mateLabel.textContent = "Teammate:";
+        mateRow.appendChild(mateLabel);
+        mateRow.appendChild(
+          createBadge(teammateTag, "bg-green-100 text-green-800")
+        );
+        body.appendChild(mateRow);
+
+        const subRow = document.createElement("div");
+        subRow.className = "flex justify-between items-center text-gray-700";
+        const subLabel = document.createElement("span");
+        subLabel.className = "font-medium";
+        subLabel.textContent = "Sub:";
+        subRow.appendChild(subLabel);
+        subRow.appendChild(
+          createBadge(subTag, "bg-yellow-100 text-yellow-800")
+        );
+        body.appendChild(subRow);
+
+        const createdRow = document.createElement("div");
+        createdRow.className =
+          "pt-2 border-t border-gray-100 text-xs text-gray-500";
+        let creationDate = "N/A";
+        if (createdAt) {
+          const numeric = Number(createdAt);
+          if (!isNaN(numeric))
+            creationDate = new Date(numeric).toLocaleDateString();
+          else {
+            const parsed = new Date(createdAt);
+            creationDate = isNaN(parsed.getTime())
+              ? String(createdAt)
+              : parsed.toLocaleDateString();
+          }
+        }
+        createdRow.textContent = `Created On: ${creationDate}`;
+        body.appendChild(createdRow);
+
+        container.appendChild(body);
+
+        return container;
+      }
+
+      function showMessage(text, type = "info") {
+        messageBox.classList.remove("hidden");
+        messageBox.classList.remove("bg-white", "bg-yellow-50", "bg-red-50");
+        messageBox.classList.remove(
+          "border-2",
+          "border-yellow-200",
+          "border-red-200"
+        );
+        if (type === "warning") {
+          messageBox.classList.add(
+            "bg-yellow-50",
+            "border-2",
+            "border-yellow-200"
+          );
+        } else if (type === "error") {
+          messageBox.classList.add("bg-red-50", "border-2", "border-red-200");
+        } else {
+          messageBox.classList.add("bg-white");
+        }
+        messageText.textContent = text;
+      }
+
+      function hideMessage() {
+        messageBox.classList.add("hidden");
+      }
+
+      onValue(
+        teamsRef,
+        (snapshot) => {
+          teamsContainer.innerHTML = ""; 
+
+          if (!snapshot.exists()) {
+            showMessage("No teams found in the database.", "warning");
+            return;
+          }
+
+          hideMessage();
+          const teamsObject = snapshot.val();
+
+          const keys = Array.isArray(teamsObject)
+            ? teamsObject.keys?.() ?? Object.keys(teamsObject)
+            : Object.keys(teamsObject);
+          Object.keys(teamsObject).forEach((teamKey) => {
+            const teamData = teamsObject[teamKey] || {};
+            const cardEl = createTeamCardElement(teamKey, teamData);
+            teamsContainer.appendChild(cardEl);
+          });
+        },
+        (error) => {
+          console.error("Firebase read error:", error);
+          showMessage(
+            `Error loading data: ${
+              error?.name ?? "Unknown error"
+            } - Check database security rules.`,
+            "error"
+          );
+        }
+      );
+    </script>
+    <script src="script.js"></script>
+    
+  </body>
+</html>
